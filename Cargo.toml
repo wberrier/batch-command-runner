@@ -9,6 +9,6 @@ authors = ["Wade Berrier <wberrier@gmail.com>"]
 [dependencies]
 anyhow = "1"
 regex = "1"
-run_script = "0"
-structopt = "0"
+clap = { version = "4", features = ["derive"] }
 walkdir = "2"
+shleazy = "0"

@@ -1,17 +1,13 @@
-use anyhow::{bail, Result};
+use anyhow::Result;
 
-use crate::common::subprocess::getstatusoutput;
+use shleazy::getoutput_shell_or_err;
 
 pub fn run(jobs: &Vec<String>) -> Result<()> {
     for j in jobs {
         println!("Executing: {}", j);
-        let (code, output) = getstatusoutput(j)?;
+        let output = getoutput_shell_or_err(j)?;
 
-        if code != 0 {
-            bail!("Error running job: {}", j);
-        }
-
-        println!("{}", output);
+        println!("{:?}", output);
     }
     Ok(())
 }

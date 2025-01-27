@@ -1,21 +1,16 @@
 use anyhow::Result;
+use clap::Parser;
 use std::collections::HashMap;
-use structopt::StructOpt;
 
-mod job_collector;
-use job_collector::*;
+use batch_command_runner::job_collector::*;
+use batch_command_runner::job_runner::single::run;
+use batch_command_runner::common::parsers::parse_key_val;
 
-mod job_runner;
-use job_runner::single::run;
-
-mod common;
-use common::parsers::parse_key_val;
-
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 struct Args {
     match_regex: String,
     command: String,
-    #[structopt(short = "D", parse(try_from_str = parse_key_val), number_of_values = 1)]
+    #[clap(short = 'D', value_parser = parse_key_val::<String, String>, number_of_values = 1)]
     defines: Vec<(String, String)>,
 }
 
@@ -33,7 +28,7 @@ fn to_hashmap(var_map: &Vec<(String, String)>) -> Result<HashMap<String, String>
 }
 
 fn main() -> Result<()> {
-    let opts = Args::from_args();
+    let opts = Args::parse();
 
     let var_map = to_hashmap(&opts.defines)?;
 
